@@ -27,7 +27,7 @@ tasks:
     difficulty: medium
     max_steps: 10
 
-  - name: loyalty_negotiation
+  - name: loyalty_constraint
     description: >
       Gold tier customer outside all standard windows. Agent must navigate
       loyalty policy, handle ambiguous defect claim, and find best
