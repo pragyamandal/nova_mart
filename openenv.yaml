@@ -1,0 +1,64 @@
+name: novamart-customer-service
+version: "1.0.0"
+description: >
+  A customer service constraint negotiation environment where an AI agent
+  resolves customer complaints at NovaMart, a simulated e-commerce company.
+  The agent must find the best possible resolution within real policy
+  constraints using tool calls to investigate orders, verify defects,
+  and apply policies.
+author: pragyamandal
+tags:
+  - openenv
+  - customer-service
+  - constraint-negotiation
+  - tool-use
+  - real-world
+
+tasks:
+  - name: easy_refund
+    description: Standard return within 30 days. All tools work perfectly.
+    difficulty: easy
+    max_steps: 10
+
+  - name: defect_resolution
+    description: >
+      Customer reports defect on item outside standard return window.
+      Agent must identify defect path and apply correct policy.
+    difficulty: medium
+    max_steps: 10
+
+  - name: loyalty_negotiation
+    description: >
+      Gold tier customer outside all standard windows. Agent must navigate
+      loyalty policy, handle ambiguous defect claim, and find best
+      constrained resolution.
+    difficulty: hard
+    max_steps: 10
+
+observation_space:
+  type: object
+  fields:
+    - customer_id
+    - customer_name
+    - issue_description
+    - order_id
+    - days_since_purchase
+    - customer_tier
+    - conversation_history
+    - available_actions
+    - step_number
+    - max_steps
+    - tools_used
+    - last_tool_result
+
+action_space:
+  type: object
+  fields:
+    - action_type
+    - action_input
+    - message
+
+endpoint:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
