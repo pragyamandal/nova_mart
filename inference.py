@@ -24,7 +24,7 @@ Respond with ONLY a valid JSON object with exactly these fields:
   'message': string message to customer (can be empty string)
 }"""
 
-TASKS = ["easy_refund", "defect_resolution", "loyalty_negotiation"]
+TASKS = ["easy_refund", "defect_resolution", "loyalty_constraint"]
 
 FALLBACK_ACTION = {
     "action_type": "respond_to_customer",
@@ -121,7 +121,7 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
         success = False
 
     finally:
-        score = sum(rewards) / 10.0
+        score = sum(rewards) / max(len(rewards), 1)
         score = max(0.0, min(1.0, score))
         rewards_str = ",".join(f"{r:.2f}" for r in rewards)
         print(
@@ -152,7 +152,7 @@ async def main():
     print("=== FINAL RESULTS ===")
     print(f"easy_refund:        {scores['easy_refund']:.3f}")
     print(f"defect_resolution:  {scores['defect_resolution']:.3f}")
-    print(f"loyalty_negotiation:{scores['loyalty_negotiation']:.3f}")
+    print(f"loyalty_constraint: {scores['loyalty_constraint']:.3f}")
     print(f"average:            {avg:.3f}")
 
 
