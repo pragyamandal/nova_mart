@@ -47,7 +47,7 @@ class NovaMartEnv:
             last_tool_result={}
         )
 
-    def step(self, action: Action) -> tuple:
+    def step(self, action: Action) -> tuple[Observation, Reward, bool, dict]:
         if self.done:
             raise RuntimeError("Episode is done. Call reset() first.")
         
@@ -93,7 +93,7 @@ class NovaMartEnv:
             last_tool_result=self.last_tool_result
         )
         
-        return obs, reward, self.done
+        return obs, reward, self.done, {}
 
     def state(self) -> dict:
         return {
