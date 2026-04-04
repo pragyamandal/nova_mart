@@ -47,7 +47,7 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
         if "process_refund" in action_history:
             if "verify_defect" in action_history and action_history.index("verify_defect") < action_history.index("process_refund"):
                 return 1.0
-            return -0.3 # Gave refund without verifying
+            return 0.0 # Gave refund without verifying
         if "issue_store_credit" in action_history:
             return 0.75
         if not tools_used:
@@ -58,7 +58,7 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
 
     elif task_name == "loyalty_constraint":
         if "process_refund" in action_history:
-            return -0.3 # Refunded but defect wasn't verifiable
+            return 0.0 # Refunded but defect wasn't verifiable
         if "issue_store_credit" in action_history:
             return 1.0
         if "escalate_to_manager" in action_history:
