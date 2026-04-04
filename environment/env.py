@@ -72,8 +72,8 @@ class NovaMartEnv:
             cumulative_reward=self.cumulative_reward,
             resolution_score=grade_episode(self.current_task["name"], 
                 self.action_history) if self.done else 0.0,
-            tool_use_score=0.1 if action.action_type != "respond_to_customer" else 0.0,
-            communication_score=0.05 if action.message else 0.0,
+            tool_use_score=0.25 if action.action_type != "respond_to_customer" else 0.0,
+            communication_score=0.25 if action.message else 0.0,
             penalty=0.0,
             feedback=self._get_feedback(action)
         )
@@ -157,8 +157,8 @@ class NovaMartEnv:
 
     def _calculate_reward(self, action: Action) -> float:
         if action.action_type == "respond_to_customer":
-            return 0.05
-        return 0.1
+            return 0.25
+        return 0.25
 
     def _get_feedback(self, action: Action) -> str:
         if self.done:
