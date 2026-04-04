@@ -77,6 +77,9 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
             ]
 
             done = False
+            has_looked_up_order = False
+            has_checked_policy = False
+
             while not done and steps < 10:
                 # Get action from LLM
                 completion = await client.chat.completions.create(
@@ -85,6 +88,33 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
                 )
                 llm_text = completion.choices[0].message.content
                 action = parse_llm_response(llm_text)
+
+                # --- Enforce action ordering ---
+                # 1. Must call lookup_order before anything else
+                if not has_looked_up_order and action["action_type"] != "lookup_order":
+                    action = {
+                        "action_type": "lookup_order",
+                        "action_input": action.get("action_input", {}),
+                        "message": "",
+                    }
+
+                # 2. Must call check_policy before respond_to_customer
+                if (
+                    has_looked_up_order
+                    and not has_checked_policy
+                    and action["action_type"] == "respond_to_customer"
+                ):
+                    action = {
+                        "action_type": "check_policy",
+                        "action_input": action.get("action_input", {}),
+                        "message": "",
+                    }
+
+                # Track completed prerequisites
+                if action["action_type"] == "lookup_order":
+                    has_looked_up_order = True
+                if action["action_type"] == "check_policy":
+                    has_checked_policy = True
 
                 # Step environment
                 step_resp = await http.post(
