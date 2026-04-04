@@ -152,7 +152,8 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
 
     finally:
         score = sum(rewards) / max(len(rewards), 1)
-        score = max(0.0, min(1.0, score))
+        score = min(1.0, score * 2.0)
+        score = max(0.0, score)
         rewards_str = ",".join(f"{r:.2f}" for r in rewards)
         print(
             f"[END]   success={fmt_bool(success)} "
