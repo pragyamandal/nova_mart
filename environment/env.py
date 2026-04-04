@@ -156,9 +156,26 @@ class NovaMartEnv:
             return {"error": f"Unknown action type: {t}"}
 
     def _calculate_reward(self, action: Action) -> float:
-        if action.action_type == "respond_to_customer":
-            return 0.25
-        return 0.25
+        task_name = self.current_task["name"]
+        action_type = action.action_type
+        
+        if self.action_history.count(action_type) > 1:
+            return -0.05
+        
+        good_actions = {
+            "easy_refund": ["lookup_order", "check_policy", "process_refund"],
+            "defect_resolution": ["lookup_order", "verify_defect", "check_policy", "process_refund"],
+            "loyalty_constraint": ["lookup_order", "check_loyalty", "verify_defect", "issue_store_credit"]
+        }
+        
+        if action_type in good_actions.get(task_name, []):
+            return 0.15
+        
+        if action_type == "respond_to_customer":
+            final_score = grade_episode(task_name, self.action_history)
+            return max(0.0, final_score * 0.4)
+        
+        return 0.05
 
     def _get_feedback(self, action: Action) -> str:
         if self.done:
