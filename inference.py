@@ -140,7 +140,7 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
                 steps += 1
 
                 print(
-                    f"[STEP]  step={steps} "
+                    f"[STEP] step={steps} "
                     f"action={action['action_type']} "
                     f"reward={step_reward:.2f} "
                     f"done={fmt_bool(done)} "
@@ -165,9 +165,9 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
         score = max(0.0, score)
         rewards_str = ",".join(f"{r:.2f}" for r in rewards)
         print(
-            f"[END]   success={fmt_bool(success)} "
+            f"[END] success={fmt_bool(success)} "
             f"steps={steps} "
-            f"score={score:.3f} "
+            f"score={score:.2f} "
             f"rewards={rewards_str}"
         )
 
