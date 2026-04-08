@@ -1,3 +1,13 @@
+---
+title: NovaMart Customer Service Environment
+emoji: 🛒
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+tags:
+  - openenv
+---
 # NovaMart Customer Service Environment
 
 An OpenEnv-compatible RL environment for training agents to resolve customer service issues under real policy constraints.
