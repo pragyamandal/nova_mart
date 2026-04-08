@@ -1,5 +1,3 @@
-from environment.data import CUSTOMERS, ORDERS, POLICIES
-
 TASKS = {
     "easy_refund": {
         "name": "easy_refund",
@@ -29,10 +27,10 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
 
     if task_name == "easy_refund":
         if "process_refund" in action_history:
-            if "verify_defect" in action_history:
-                return 0.5  # penalise unnecessary verify_defect
             if "check_policy" in action_history and action_history.index("check_policy") < action_history.index("process_refund"):
-                return 0.7  # correct path
+                if "verify_defect" in action_history:
+                    return 0.5
+                return 0.7
             return 0.4
         if "check_policy" in action_history:
             return 0.3

@@ -12,7 +12,7 @@ API_BASE_URL = os.getenv("API_BASE_URL")
 MODEL_NAME = os.getenv("MODEL_NAME")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
-ENV_URL = "http://localhost:7860"
+ENV_URL = os.getenv("ENV_URL", "http://localhost:7860")
 
 SYSTEM_PROMPT = """You are a customer service agent at NovaMart electronics store.
 Resolve customer issues by using the available tools and actions.
