@@ -173,7 +173,9 @@ class NovaMartEnv:
         
         if action_type == "respond_to_customer":
             final_score = grade_episode(task_name, self.action_history)
-            return max(0.0, final_score * 0.4)
+            # Scale by number of correct steps taken
+            step_bonus = min(len(self.action_history) * 0.05, 0.3)
+            return max(0.0, (final_score * 0.4) + step_bonus)
         
         return 0.05
 
