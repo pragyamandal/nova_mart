@@ -160,7 +160,7 @@ class NovaMartEnv:
         action_type = action.action_type
         
         if self.action_history.count(action_type) > 1:
-            return 0.0
+            return 0.01
         
         good_actions = {
             "easy_refund": ["lookup_order", "check_policy", "process_refund"],

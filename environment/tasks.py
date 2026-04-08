@@ -36,13 +36,13 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
             return 0.3
         if not tools_used:
             return 0.1
-        return 0.0
+        return 0.01
 
     elif task_name == "defect_resolution":
         if "process_refund" in action_history:
             if "verify_defect" in action_history and action_history.index("verify_defect") < action_history.index("process_refund"):
                 return 0.85  # correct defect path
-            return 0.0  # refund without verifying defect
+            return 0.01  # refund without verifying defect
         if "issue_store_credit" in action_history:
             return 0.65
         if "escalate_to_manager" in action_history:
@@ -51,14 +51,14 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
             return 0.1
         if "check_policy" in action_history or "lookup_order" in action_history:
             return 0.3
-        return 0.0
+        return 0.01
 
     elif task_name == "loyalty_constraint":
         if "process_refund" in action_history:
-            return 0.0  # wrong, defect not confirmed
+            return 0.01  # wrong, defect not confirmed
         if "issue_store_credit" in action_history and "check_loyalty" in action_history:
             if action_history.index("check_loyalty") < action_history.index("issue_store_credit"):
-                return 1.0  # perfect path
+                return 0.99  # perfect path
             return 0.7
         if "escalate_to_manager" in action_history:
             return 0.6
@@ -66,6 +66,6 @@ def grade_episode(task_name: str, action_history: list[str]) -> float:
             return 0.4
         if not tools_used:
             return 0.1
-        return 0.0
+        return 0.01
 
-    return 0.0
+    return 0.01
