@@ -6,7 +6,7 @@ import httpx
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 
 API_BASE_URL = os.getenv("API_BASE_URL")
 MODEL_NAME = os.getenv("MODEL_NAME")
@@ -16,12 +16,20 @@ ENV_URL = "http://localhost:7860"
 
 SYSTEM_PROMPT = """You are a customer service agent at NovaMart electronics store.
 Resolve customer issues by using the available tools and actions.
-Always investigate the order and check policies before taking resolution actions.
+
+STRICT RULES - follow in order:
+1. ALWAYS call lookup_order first
+2. ALWAYS call check_policy second
+3. For defect complaints: call verify_defect before any refund
+4. For gold/silver customers outside return window: call check_loyalty then issue_store_credit
+5. NEVER call respond_to_customer until you have taken at least 3 tool actions
+6. NEVER call process_refund without first calling verify_defect for defect cases
+
 Respond with ONLY a valid JSON object with exactly these fields:
 {
-  'action_type': one of [lookup_order, check_policy, verify_defect, check_loyalty, process_refund, issue_store_credit, process_exchange, escalate_to_manager, respond_to_customer],
-  'action_input': dict of parameters for the action,
-  'message': string message to customer (can be empty string)
+  "action_type": one of [lookup_order, check_policy, verify_defect, check_loyalty, process_refund, issue_store_credit, process_exchange, escalate_to_manager, respond_to_customer],
+  "action_input": {},
+  "message": ""
 }"""
 
 TASKS = ["easy_refund", "defect_resolution", "loyalty_constraint"]
@@ -147,8 +155,9 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
 
             success = True
 
-    except Exception:
+    except Exception as e:
         success = False
+        print(f"[ERROR] {e}")
 
     finally:
         score = sum(rewards) / max(len(rewards), 1)
