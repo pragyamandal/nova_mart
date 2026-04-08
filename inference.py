@@ -157,12 +157,12 @@ async def run_task(task_name: str, client: AsyncOpenAI) -> float:
 
     except Exception as e:
         success = False
-        print(f"[ERROR] {e}")
+        
 
     finally:
         score = sum(rewards) / max(len(rewards), 1)
-        score = min(1.0, score * 2.0)
-        score = max(0.0, score)
+        score = score * 2.0
+        score = min(0.99, max(0.01, score))
         rewards_str = ",".join(f"{r:.2f}" for r in rewards)
         print(
             f"[END] success={fmt_bool(success)} "
