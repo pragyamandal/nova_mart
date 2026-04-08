@@ -21,7 +21,51 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "healthy"}
+
+
+@app.get("/metadata")
+def metadata():
+    return {
+        "name": "novamart-customer-service",
+        "description": "A customer service constraint negotiation environment where an AI agent resolves customer complaints at NovaMart within real policy constraints.",
+        "version": "1.0.0",
+        "tasks": ["easy_refund", "defect_resolution", "loyalty_constraint"]
+    }
+
+
+@app.get("/schema")
+def schema():
+    return {
+        "action": {
+            "type": "object",
+            "fields": ["action_type", "action_input", "message"]
+        },
+        "observation": {
+            "type": "object", 
+            "fields": ["customer_id", "customer_name", "issue_description", 
+                      "order_id", "days_since_purchase", "customer_tier",
+                      "conversation_history", "available_actions", 
+                      "step_number", "max_steps", "tools_used", "last_tool_result"]
+        },
+        "state": {
+            "type": "object",
+            "fields": ["current_task", "step_number", "action_history", 
+                      "cumulative_reward", "done"]
+        }
+    }
+
+
+@app.post("/mcp")
+def mcp(request: dict = None):
+    return {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+            "name": "novamart-customer-service",
+            "description": "OpenEnv customer service environment"
+        }
+    }
 
 
 @app.post("/reset")
