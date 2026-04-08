@@ -69,9 +69,10 @@ def mcp(request: dict = None):
 
 
 @app.post("/reset")
-def reset(request: ResetRequest):
+def reset(request: ResetRequest = None):
     try:
-        observation: Observation = env.reset(request.task_name)
+        task = request.task_name if request else "easy_refund"
+        observation: Observation = env.reset(task)
         return observation
     except Exception as e:
         return JSONResponse(
